@@ -1,12 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Cavan's Blog</title>
-</head>
-<body>
-    
-</body>
+  </head>
+  <body>
+    <div>
+      <h1>React input fields</h1>
+      <h6>11/06/19</h6>
+      <p>
+        As I'm learning react one of the common things I have to code is input
+        text and map it to the state of the component.
+      </p>
+      <pre>
+            <input
+                type="text"
+                onChange={this.handleChange}
+                value={this.state.searchValue}
+                placeholder="Search.."
+            />
+        </pre>
+      <p>
+        Here is an example of an text input that takes it's value from the
+        state. However in order to change the state value we need to implement
+        the handleChange function.
+      </p>
+      <pre>
+        handleChange(e) {
+            const value = e.target.value;
+            this.setState({
+                [e.target.name]: value
+            });
+        }
+      </pre>
+    </div>
+  </body>
 </html>
