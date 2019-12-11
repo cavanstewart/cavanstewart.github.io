@@ -4,37 +4,130 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
     <title>Cavan's Blog</title>
   </head>
+  <style>
+    h1 {
+      text-align: center;
+    }
+    .card {
+      margin: 0px 100px 50px 100px;
+    }
+
+    .card-header {
+      background-color: rgb(228, 194, 150);
+    }
+
+    .card-body {
+      background-color: rgb(252, 242, 228);
+    }
+  </style>
   <body>
-    <div>
-      <h1>React input fields</h1>
-      <h6>11/06/19</h6>
-      <p>
-        As I'm learning react one of the common things I have to code is input
-        text and map it to the state of the component.
-      </p>
-      <pre>
-            <input
-                type="text"
-                onChange={this.handleChange}
-                value={this.state.searchValue}
-                placeholder="Search.."
-            />
-        </pre>
-      <p>
-        Here is an example of an text input that takes it's value from the
-        state. However in order to change the state value we need to implement
-        the handleChange function.
-      </p>
-      <pre>
-        handleChange(e) {
-            const value = e.target.value;
-            this.setState({
-                [e.target.name]: value
-            });
-        }
+    <h1>Code Blog</h1>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>React input fields</h2>
+        <h4>11/06/19</h4>
+      </div>
+      <div class="card-body">
+        <p>
+          As I'm learning react one of the common things I have to code is input
+          text and map it to the state of the component.
+        </p>
+        <pre>
+          <code>
+  &ltinput
+        name="searchValue"
+        type="text"
+        onChange={this.handleChange}
+        value={this.state.searchValue}
+        placeholder="Search.."
+    /&gt
+          </code>
       </pre>
+        <p>
+          Here is an example of an text input that takes it's value from the
+          state. However in order to change the state value we need to implement
+          the handleChange function.
+        </p>
+        <pre>
+          <code>
+  handleChange(e) {
+      const value = e.target.value;
+      this.setState({
+          [e.target.name]: value
+      });
+  }
+          </code>
+      </pre>
+        <p>
+          In order to generalize the handleChange function for all inputs mapped
+          to a state, we can use the event object. This gives us the ability to
+          access the target variables name and value. e.target.name needs to be
+          set to the state variable you desire the input to change and
+          e.target.value accesses the new value the user is inputting.
+        </p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h2>Redux actions async request chaining</h2>
+        <h4>11/22/19</h4>
+      </div>
+      <div class="card-body">
+        <p>
+          Dealing with api call I have to deal with async request timing
+          sometimes. One of the middlewares most suited for this is redux-thunk.
+          Below is an example of using redux promise middleware and redux thunks
+          together for an action.
+        </p>
+        <pre>
+            <code>
+function getStudentStats(id, authToken, slack_id) {
+  return dispatch => {
+    
+    const standups = dispatch({
+      type: "GET_STUDENT_STANDUPS",
+      payload: fetch(`/api/students/${id}/standups?access_token=${authToken}`)
+        .then(response => response.json())
+        .then(standups => {
+          return standups;
+        })
+    });
+
+    const checkins = dispatch({
+      type: "GET_STUDENT_CHECKINS",
+      payload: fetch(
+        `/api/checkins/slackId/${slack_id}?access_token=${authToken}`
+      )
+        .then(response => response.json())
+        .then(checkins => {
+          return checkins;
+        })
+    });
+
+    Promise.all([standups, checkins]).then(standupsAndCheckins =>
+      dispatch({
+        type: "GET_STANDUPS_AND_CHECKINS",
+        payload: mergeStudentData(standupsAndCheckins)
+      })
+    );
+  };
+}
+      </code>
+      </pre>
+        <p>
+          In this example we want to dispatch three actions but one of them
+          depends on the result of two others. We can solve this by using
+          promise all and .then so the fourth action waits for the first two
+          actions to resolve before dispatching.
+        </p>
+      </div>
     </div>
   </body>
 </html>
